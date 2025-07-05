@@ -1,7 +1,8 @@
 // frontend/js/main.js
 
 // Define the base URL for your backend API
-const API_BASE_URL = 'https://cricket-backend-slb4.onrender.com';
+// IMPORTANT: Ensure this matches your Render backend's public URL followed by /api/match
+const API_BASE_URL = 'https://cricket-backend-slb4.onrender.com/api/match'; // <--- FIX IS HERE
 
 // Global variables for game state
 let currentGameState = null;
