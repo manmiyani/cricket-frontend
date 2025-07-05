@@ -8,14 +8,16 @@ body {
     margin: 0;
     color: #e2e8f0; /* Light gray for text */
     overflow-x: hidden; /* Prevent horizontal scroll */
+    padding: 20px; /* Add some padding around the body for very small screens */
+    box-sizing: border-box; /* Include padding in element's total width/height */
 }
 .container {
     background-color: rgba(30, 41, 59, 0.8); /* Darker, semi-transparent background */
     border-radius: 20px;
     padding: 30px;
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5); /* More pronounced shadow */
-    width: 95%;
-    max-width: 1100px; /* Slightly wider */
+    width: 100%; /* Use 100% width to fill available space */
+    max-width: 1100px; /* Max width for larger screens */
     text-align: center;
     animation: fadeIn 0.8s ease-out;
     backdrop-filter: blur(12px); /* Stronger blur */
@@ -24,6 +26,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 25px; /* Increased gap */
+    box-sizing: border-box;
 }
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-30px); }
@@ -37,6 +40,7 @@ body {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
     animation: slideIn 0.6s ease-out;
     border: 1px solid rgba(74, 85, 104, 0.4);
+    box-sizing: border-box;
 }
 @keyframes slideIn {
     from { opacity: 0; transform: translateX(-60px); }
@@ -63,6 +67,7 @@ h1, h2, h3, h4 {
     color: #a0aec0; /* Subtler label color */
 }
 .input-group input[type="number"],
+.input-group input[type="text"], /* Added text input for room code */
 .input-group select {
     background-color: rgba(74, 85, 104, 0.4); /* Darker input background */
     border: 1px solid rgba(113, 128, 150, 0.6); /* Clearer border */
@@ -75,8 +80,13 @@ h1, h2, h3, h4 {
     width: 120px; /* Slightly wider input */
     text-align: center;
     font-family: 'Roboto Mono', monospace; /* Monospace for numbers */
+    box-sizing: border-box;
+}
+.input-group input[type="text"] {
+    width: 180px; /* Wider for room code */
 }
 .input-group input[type="number"]:focus,
+.input-group input[type="text"]:focus,
 .input-group select:focus {
     background-color: rgba(113, 128, 150, 0.5);
     box-shadow: 0 0 0 4px rgba(66, 153, 225, 0.6); /* Blue focus glow */
@@ -144,6 +154,7 @@ h1, h2, h3, h4 {
     padding: 25px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(74, 85, 104, 0.4);
+    box-sizing: border-box;
 }
 .scorecard-team h3 {
     font-size: 1.6em; /* Slightly larger */
@@ -295,6 +306,7 @@ h1, h2, h3, h4 {
     animation: slideInTop 0.5s ease-out;
     border: 1px solid rgba(74, 85, 104, 0.5);
     max-width: 90%;
+    box-sizing: border-box;
 }
 @keyframes slideInTop {
     from { opacity: 0; transform: translate(-50%, -120px); }
@@ -332,6 +344,7 @@ h1, h2, h3, h4 {
     width: calc(100% - 20px);
     max-width: 280px; /* Slightly wider select */
     font-family: 'Inter', sans-serif;
+    box-sizing: border-box;
 }
 .strike-player-select option {
     background-color: #2d3748; /* Darker option background */
@@ -341,14 +354,66 @@ h1, h2, h3, h4 {
     box-shadow: 0 0 0 4px rgba(66, 153, 225, 0.6);
 }
 
-@media (max-width: 768px) {
+/* Room code display styling */
+#room-code-display {
+    position: absolute; /* Position absolutely relative to its parent .gameplay-section */
+    top: 20px; /* Adjust as needed for spacing */
+    right: 20px; /* Adjust as needed for spacing */
+    background-color: rgba(45, 55, 72, 0.9); /* Darker background */
+    color: #a0aec0; /* Lighter text */
+    font-size: 0.9em;
+    padding: 8px 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    z-index: 10; /* Ensure it's above other elements if needed */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+#room-code-display .font-bold {
+    color: #68d391; /* Highlight room code */
+    font-size: 1.1em;
+    letter-spacing: 1px;
+}
+
+
+/* --- Responsive Adjustments --- */
+
+/* For screens smaller than 1100px (max-width of container) */
+@media (max-width: 1150px) {
     .container {
-        padding: 20px;
-        width: 98%;
-        gap: 15px;
+        padding: 25px;
+        gap: 20px;
     }
     .section {
         padding: 20px;
+    }
+}
+
+/* For screens smaller than 768px (tablets/larger phones) */
+@media (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+    .container {
+        padding: 20px;
+        gap: 15px;
+    }
+    .section {
+        padding: 18px;
+        margin-bottom: 15px;
+    }
+    h1 {
+        font-size: 2.2em; /* Smaller main title */
+    }
+    h2 {
+        font-size: 1.8em; /* Smaller section titles */
+    }
+    h3 {
+        font-size: 1.4em;
+    }
+    h4 {
+        font-size: 1.1em;
     }
     .input-group {
         flex-direction: column;
@@ -356,34 +421,131 @@ h1, h2, h3, h4 {
         gap: 15px;
     }
     .input-group input[type="number"],
+    .input-group input[type="text"],
     .input-group select {
-        width: 140px;
+        width: 160px; /* Slightly wider for better touch */
         padding: 10px 15px;
+        font-size: 1em;
+    }
+    .input-group input[type="text"] {
+        width: 200px; /* Room code input adjusted */
+    }
+    .btn {
+        padding: 12px 25px;
+        font-size: 0.95em;
+        margin: 8px;
+    }
+    .toss-options button {
+        width: 120px;
     }
     .scorecard-grid {
-        grid-template-columns: 1fr;
-        gap: 15px;
+        grid-template-columns: 1fr; /* Stack scorecards vertically on small screens */
+        gap: 20px;
     }
     .scorecard-team {
         padding: 20px;
     }
     .score-display {
-        font-size: 2.8em;
+        font-size: 2.5em; /* Smaller score font */
+    }
+    .player-score-list {
+        max-height: 180px; /* Shorter list for smaller screens */
+    }
+    .player-score-list li {
+        padding: 8px 0;
+        font-size: 0.95em;
+    }
+    .player-stats {
+        font-size: 0.8em;
+        gap: 8px;
+    }
+    .current-over-ball {
+        padding: 5px 8px;
+        font-size: 0.8em;
+        min-width: 30px;
     }
     .controls {
         flex-direction: row;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 8px; /* Smaller gap for control buttons */
     }
     .control-btn {
-        width: 55px;
-        padding: 10px 12px;
-        font-size: 1.05em;
+        width: 50px; /* Smaller control buttons */
+        padding: 10px 10px;
+        font-size: 0.9em;
     }
     .control-btn.wide {
-        width: 100px;
+        width: 90px; /* Adjusted wide buttons */
     }
-    .toss-options button {
-        width: 120px;
+    .message-box {
+        padding: 25px;
+        font-size: 0.95em;
+    }
+    .message-box button {
+        margin-top: 20px;
+        padding: 10px 20px;
+    }
+    #room-code-display {
+        position: static; /* Make it flow with content on small screens */
+        margin-top: 15px; /* Add margin if it's static */
+        justify-content: center; /* Center it if static */
+        width: 100%; /* Take full width if static */
+        box-sizing: border-box;
+    }
+    #gameplay-section .flex.justify-between.items-center.mb-4 {
+        flex-direction: column; /* Stack title and room code */
+        gap: 10px;
+    }
+}
+
+/* For very small screens (e.g., old iPhones SE, small Androids) */
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    .container {
+        padding: 15px;
+        gap: 10px;
+    }
+    .section {
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+    h1 {
+        font-size: 2em;
+    }
+    h2 {
+        font-size: 1.6em;
+    }
+    .btn {
+        padding: 10px 20px;
+        font-size: 0.85em;
+        margin: 5px;
+    }
+    .input-group input[type="number"],
+    .input-group input[type="text"],
+    .input-group select {
+        width: 100%; /* Full width inputs */
+        max-width: 180px; /* Max width for inputs */
+    }
+    .input-group label {
+        width: 100%;
+    }
+    .control-btn {
+        width: 45px;
+        padding: 8px 8px;
+        font-size: 0.8em;
+    }
+    .control-btn.wide {
+        width: 80px;
+    }
+    .score-display {
+        font-size: 2.2em;
+    }
+    .player-score-list li {
+        font-size: 0.9em;
+    }
+    .player-stats {
+        font-size: 0.75em;
     }
 }
