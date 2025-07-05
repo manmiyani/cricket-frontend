@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cricket Score Counter</title>
+    <!-- SEO Keywords -->
+    <meta name="keywords" content="cricket score, cricket counter, live cricket score, cricket match scorer, online cricket score, cricket score app, gully cricket, cricket statistics, player stats, cricket fours, cricket sixes, strike rate, cricket innings, super over, cricket toss, free cricket scorer, web app cricket, HTML CSS JS cricket">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-3xl">Cricket Score Counter</h1>
+
+        <!-- Configuration Section (Create Match) -->
+        <div id="config-section" class="section">
+            <h2 class="text-2xl">Create New Match</h2>
+            <div class="input-group">
+                <label>
+                    Overs:
+                    <input type="number" id="overs-input" value="20" min="1" max="50">
+                </label>
+                <label>
+                    Wickets:
+                    <input type="number" id="wickets-input" value="10" min="0" max="11">
+                </label>
+            </div>
+            <button id="start-match-btn" class="btn">Create Match</button>
+        </div>
+
+        <!-- Join Match Section -->
+        <div id="join-match-section" class="section">
+            <h2 class="text-2xl">Join Existing Match</h2>
+            <div class="input-group">
+                <label>
+                    Room Code:
+                    <input type="text" id="room-code-input" placeholder="Enter Room Code" maxlength="6" class="uppercase">
+                </label>
+            </div>
+            <button id="join-match-btn" class="btn btn-secondary">View Scorecard</button>
+        </div>
+
+        <!-- Toss Section -->
+        <div id="toss-section" class="section hidden">
+            <h2 class="text-2xl">Toss Time!</h2>
+            <p class="text-lg mb-4" id="toss-message">Team A calls...</p>
+            <div class="toss-options flex justify-center gap-4">
+                <button id="call-heads-btn" class="btn btn-secondary">Heads</button>
+                <button id="call-tails-btn" class="btn btn-secondary">Tails</button>
+            </div>
+            <div id="toss-winner-options" class="hidden mt-4">
+                <p class="text-lg mb-4" id="toss-winner-message"></p>
+                <div class="flex justify-center gap-4">
+                    <button id="choose-bat-btn" class="btn btn-green">Bat</button>
+                    <button id="choose-field-btn" class="btn btn-green">Field</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gameplay Section -->
+        <div id="gameplay-section" class="section hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl" id="current-innings-title"></h2>
+                <div id="room-code-display" class="bg-gray-700 text-white text-sm px-3 py-1 rounded-lg shadow-md flex items-center">
+                    Room: <span class="font-bold ml-2 text-yellow-300"></span>
+                </div>
+            </div>
+
+            <div class="scorecard-grid">
+                <!-- Team 1 Scorecard -->
+                <div id="team1-scorecard" class="scorecard-team">
+                    <h3 id="team1-name">Team A</h3>
+                    <div class="score-display" id="team1-score">0<small>/0</small></div>
+                    <p class="text-md mb-2">Overs: <span id="team1-overs">0.0</span> / <span id="total-overs-display"></span></p>
+                    <hr class="border-gray-600 my-3">
+                    <h4 class="text-xl mb-2">Players</h4>
+                    <select id="team1-strike-player" class="strike-player-select"></select>
+                    <ul id="team1-player-scores" class="player-score-list">
+                        <!-- Player scores will be inserted here -->
+                    </ul>
+                    <div class="current-over-display mt-4">
+                        <h4 class="text-lg mb-2">Current Over</h4>
+                        <div id="team1-current-over-balls" class="current-over-balls">
+                            <!-- Balls will be rendered here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team 2 Scorecard -->
+                <div id="team2-scorecard" class="scorecard-team">
+                    <h3 id="team2-name">Team B</h3>
+                    <div class="score-display" id="team2-score">0<small>/0</small></div>
+                    <p class="text-md mb-2">Overs: <span id="team2-overs">0.0</span> / <span id="total-overs-display2"></span></p>
+                    <hr class="border-gray-600 my-3">
+                    <h4 class="text-xl mb-2">Players</h4>
+                    <select id="team2-strike-player" class="strike-player-select"></select>
+                    <ul id="team2-player-scores" class="player-score-list">
+                        <!-- Player scores will be inserted here -->
+                    </ul>
+                    <div class="current-over-display mt-4">
+                        <h4 class="text-lg mb-2">Current Over</h4>
+                        <div id="team2-current-over-balls" class="current-over-balls">
+                            <!-- Balls will be rendered here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="controls mt-6">
+                <button class="btn control-btn" data-runs="0">0</button>
+                <button class="btn control-btn" data-runs="1">1</button>
+                <button class="btn control-btn" data-runs="2">2</button>
+                <button class="btn control-btn" data-runs="3">3</button>
+                <button class="btn control-btn" data-runs="4">4</button>
+                <button class="btn control-btn" data-runs="6">6</button>
+                <button class="btn control-btn wide btn-red" id="wicket-btn">Wicket</button>
+                <button class="btn control-btn wide btn-secondary" id="extra-btn">Extra</button>
+                <button class="btn control-btn wide btn-secondary" id="no-ball-btn">No-Ball</button>
+                <button class="btn control-btn wide btn-secondary" id="wide-btn">Wide</button>
+                <button class="btn control-btn wide btn-secondary" id="undo-btn">Undo</button>
+                <button class="btn control-btn wide btn-secondary" id="end-innings-btn">End Innings</button>
+                <button class="btn control-btn wide btn-red" id="end-match-home-btn">End Match</button>
+            </div>
+        </div>
+
+        <!-- Match Result Section -->
+        <div id="result-section" class="section hidden">
+            <h2 class="text-2xl">Match Result</h2>
+            <p class="text-xl mb-4" id="match-result-message"></p>
+            <div class="scorecard-grid">
+                <div class="scorecard-team">
+                    <h3 id="final-team1-name"></h3>
+                    <div class="score-display" id="final-team1-score"></div>
+                    <p class="text-md mb-2">Overs: <span id="final-team1-overs"></span></p>
+                    <h4 class="text-xl mb-2">Players</h4>
+                    <ul id="final-team1-player-scores" class="player-score-list"></ul>
+                </div>
+                <div class="scorecard-team">
+                    <h3 id="final-team2-name"></h3>
+                    <div class="score-display" id="final-team2-score"></div>
+                    <p class="text-md mb-2">Overs: <span id="final-team2-overs"></span></p>
+                    <h4 class="text-xl mb-2">Players</h4>
+                    <ul id="final-team2-player-scores" class="player-score-list"></ul>
+                </div>
+            </div>
+            <button id="reset-match-btn" class="btn mt-6">Play Again</button>
+        </div>
+
+        <!-- Message Box -->
+        <div id="message-box" class="message-box hidden">
+            <p id="message-text"></p>
+            <button id="message-ok-btn">OK</button>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
