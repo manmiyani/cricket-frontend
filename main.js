@@ -2,7 +2,7 @@
 
 // Define the base URL for your backend API
 // IMPORTANT: Ensure this matches your Render backend's public URL followed by /api/match
-const API_BASE_URL = 'https://cricket-backend-slb4.onrender.com/api/match'; // <--- FIX IS HERE
+const API_BASE_URL = 'https://cricket-backend-slb4.onrender.com/api/match'; // This should be correct if your backend routes are prefixed with /api/match
 
 // Global variables for game state
 let currentGameState = null;
@@ -278,7 +278,8 @@ function updatePlayerListAndSelect(team, playerListEl, strikePlayerSelectEl) {
             option.textContent = player.name;
             strikePlayerSelectEl.appendChild(option);
         });
-        if (team.currentBatsmen.length > 0) {
+        // Set the selected value to the current striker
+        if (team.currentBatsmen.length > 0 && strikePlayerSelectEl.options.length > 0) {
             strikePlayerSelectEl.value = team.currentBatsmen[0];
         }
     }
@@ -376,8 +377,15 @@ function populateFinalPlayerScores(team, listElement) {
             status = ` (Out - ${player.dismissalType})`;
         } else if (currentGameState && currentGameState.battingTeamId && team.currentBatsmen.includes(team.players.indexOf(player)) && !team.inningsComplete) {
             status = ' (Not Out)';
-        } else if (currentGameState && !player.isOut && !team.inningsComplete && team.players.indexOf(player) >= team.battingOrder[0]) {
-            status = ' (Did not bat)';
+        } else if (currentGameState && !player.isOut && !team.inningsComplete && team.players.indexOf(player) >= team.battingOrder[0]) { // Corrected logic for "Did not bat"
+            // This logic is tricky. A player "did not bat" if they weren't out, and the innings completed,
+            // and they weren't one of the current batsmen, and they were in the batting order.
+            // For simplicity, let's assume if they are not out and the innings is complete, and they weren't on the field
+            // they didn't bat.
+            const isCurrentlyBatting = currentGameState.teams[currentGameState.battingTeamId]?.currentBatsmen.includes(team.players.indexOf(player));
+            if (!player.isOut && team.inningsComplete && !isCurrentlyBatting) {
+                status = ' (Did not bat)';
+            }
         }
         const strikeRate = player.ballsFaced > 0 ? ((player.runs / player.ballsFaced) * 100).toFixed(1) : '0.0';
 
@@ -536,11 +544,14 @@ async function handleTossCall(call) {
         callHeadsBtn.disabled = true;
         callTailsBtn.disabled = true;
 
-        if (response.gameState.tossWinnerChoice) {
-            tossSection.classList.add('hidden');
-            gameplaySection.classList.remove('hidden');
-            showMessage(`Match starts! ${teams[response.gameState.battingTeamId].name} will bat first.`);
-        }
+        // The backend now handles the transition to gameplay after choice,
+        // so this check might be redundant here if tossWinnerChoice is not set yet.
+        // It's better to rely on updateUI's section handling.
+        // if (response.gameState.tossWinnerChoice) {
+        //     tossSection.classList.add('hidden');
+        //     gameplaySection.classList.remove('hidden');
+        //     showMessage(`Match starts! ${teams[response.gameState.battingTeamId].name} will bat first.`);
+        // }
     } catch (error) {
         // Error handled by callBackend
     }
